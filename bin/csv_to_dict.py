@@ -10,7 +10,7 @@ import re
 import pprint
 
 
-def main():
+def main(csv_file):
     
 
 def parse_csv(csv_file):
@@ -38,4 +38,13 @@ def create_dict_from_dataframe(dataframe):
 #TODO:get dict
 
 if __name__ == __main__:
-    main()
+    import argparse
+    """
+    parsing arguments
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('-c', dest='csv_file',
+                        help='csv file created from excel export',
+                        required=True)
+
+    main(args.csv_file)

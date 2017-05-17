@@ -5,6 +5,8 @@ setting up logging
 """
 
 import logging
+import time
+import datetime
 
 
 def main(filename):
@@ -26,4 +28,4 @@ def configure_logger(filename):
 
 
 if __name__ == "__main__":
-    main()
+    main(filename)
