@@ -13,16 +13,18 @@ import collections
 from do_logging import configure_logger
 from csv_to_dict import parse_csv
 import pandas as pd
+import plot_dict
 
 log_filename = "CONCORD-VCF"
 
 def main(excel_file_1, sample_name_1, excel_file_2, sample_name_2):
     logger = configure_logger(log_filename)
-    csv_file_1 = parse_excel_template(sample_name, excel_file, logger)
-    csv_file_2 = parse_excel_template(sample_name, excel_file, logger)
-    vcf_dict_1, SNP_dict_1, indel_dict_1  = parse_csv(csv_file_1)
+    csv_file_1 = parse_excel_template(sample_name_1, excel_file_1, logger)
+    csv_file_2 = parse_excel_template(sample_name_2, excel_file_2, logger)
+    vcf_dict_1, SNP_dict_1, indel_dict_1 = parse_csv(csv_file_1)
     vcf_dict_2, SNP_dict_2, indel_dict_2 = parse_csv(csv_file_2)
-
+    plot_total = plot_dict.main(vcf_dict_1, vcf_dict_2, logger)
+    
 
 class convert_excel:
 
@@ -73,11 +75,14 @@ def parse_excel_template(file_name, excel_workbook, logger):
 if __name__  ==  "__main__":
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('-e', dest='excel_file',
+    parser.add_argument('-FE', dest='excel_file_1',
                         help='excel file from workbench export', required=True)
-    parser.add_argument('-n', dest='sample_name', 
+    parser.add_argument('-FS', dest='sample_name_1', 
                         help='name of the sample or vcf in the excel file', required=True)
-
+    parser.add_argument('-SE', dest='excel_file_2',
+                        help='excel file from workbench export', required=True)
+    parser.add_argument('-SS', dest='sample_name_2',
+                        help='name of the sample or vcf in the excel file', required=True)
     args = parser.parse_args()
-    main(args.excel_file, args.sample_name)
+    main(args.excel_file_1, args.sample_name_1, args.excel_file_2, args.sample_name_2)
     

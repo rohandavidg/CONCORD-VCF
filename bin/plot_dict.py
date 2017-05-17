@@ -18,12 +18,15 @@ import logging
 
 
 def main(total_dict1, total_dict2, logger):
-    VCF_overlap, first_vcf_unique, second_vcf_unique = compare_vcf(total_dict1, total_dict2)
-    if second_vcf_unique > 0:
-        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0.5)
+    VCF_overlap, first_vcf_unique, second_vcf_unique = compare_vcf(total_dict1, total_dict2, logger)
+    if second_vcf_unique > 0 and first_vcf_unique > 0:
+        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique,0.5, 0.5)
+    elif second_vcf_unique == 0 and first_vcf_unique == 0:
+        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0)
+    elif second_vcf_unique == 0 and first_vcf_unique > 0:
+        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0.5, 0)
     else:
-        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0)
-
+        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0.5)
 
 def compare_vcf(new_dict, old_dict, logger):
     with open('Total_variants_log.txt', 'w') as fout:
@@ -63,12 +66,12 @@ def compare_vcf(new_dict, old_dict, logger):
 
 
 
-def plot_differences(overlap, new_vcf_unique, old_vcf_unique, error_size):
+def plot_differences(overlap, new_vcf_unique, old_vcf_unique, new_error_size, old_error_size):
     overlap_text = str(overlap) + " overlapping"
     new_vcf_txt = str(new_vcf_unique) + " unique first var"
     old_vcf_txt = str(old_vcf_unique) + " unique second var"
     plt.figure(figsize=(8,8))
-    v = venn2(subsets = {'10': 1.5, '01': error_size, '11': 1.5}, set_labels = ('1st VCF INPUT', '2nd VCF INPUT'))
+    v = venn2(subsets = {'10': new_error_size, '01': old_error_size, '11': 1.5}, set_labels = ('1st VCF INPUT', '2nd VCF INPUT'))
     v.get_patch_by_id('10').set_alpha(0.75)
     v.get_patch_by_id('10').set_color('red')
     v.get_patch_by_id('01').set_alpha(0.75)
