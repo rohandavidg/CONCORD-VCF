@@ -1,2 +1,4 @@
 *~
 tests
+*.log
+*.csv
