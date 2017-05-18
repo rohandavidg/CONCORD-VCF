@@ -8,41 +8,47 @@ tailored for CLC vcf for the moment
 import vcf
 import os
 import csv
-from logging import logging
+from do_logging import configure_logger
 from collections import defaultdict
 import pprint
 
-def main(vcf_file):
-    vcf_snp_dict, vcf_indel_dict, vcf_del_dict, vcf_transition_dict = vcf_to_dict(vcf_file)
-    return vcf_snp_dict, vcf_indel_dict, vcf_del_dict, vcf_transition_dict
+
+def main(vcf_file, logger):
+    vcf_total_dict, vcf_snp_dict, vcf_indel_dict  = vcf_to_dict(vcf_file, logger)
+    return vcf_total_dict, vcf_snp_dict, vcf_indel_dict
 
 
-def vcf_to_dict(vcf_file):
+def vcf_to_dict(vcf_file, logger):
     snp_dict = {}
     indel_dict = {}
-    del_dict = {}
-    transition_dict = {}
+    total_dict = {}
     vcf_reader = vcf.Reader(open(vcf_file, 'r'))
     for record in vcf_reader:
+        create_dict = multi_allelic(record.CHROM, record.POS, record.REF, record.ALT, record.samples[0]['GT'],
+                                   record.samples[0]['AD'], record.samples[0]['DP'], logger)
+        total_dict.update(create_dict)
         if record.is_snp:
             create_dict = multi_allelic(record.CHROM, record.POS, record.REF, record.ALT, record.samples[0]['GT'], 
-                                        record.samples[0]['AD'], record.samples[0]['DP'])
+                                        record.samples[0]['AD'], record.samples[0]['DP'], logger)
             snp_dict.update(create_dict)
         elif record.is_indel:
             create_dict = multi_allelic(record.CHROM, record.POS, record.REF, record.ALT, record.samples[0]['GT'],
-                                       record.samples[0]['AD'], record.samples[0]['DP'])
+                                       record.samples[0]['AD'], record.samples[0]['DP'], logger)
             indel_dict.update(create_dict)
-        elif record.is_transition:
-            create_dict = multi_allelic(record.CHROM, record.POS, record.REF, record.ALT, record.samples[0]['GT'],
-                                        record.samples[0]['AD'], record.samples[0]['DP'])
-            del_dict.update(create_dict)
-        elif record.is_deletion:
-            create_dict = multi_allelic(record.CHROM, record.POS, record.REF, record.ALT, record.samples[0]['GT'],
-                                        record.samples[0]['AD'], record.samples[0]['DP'])
-            transition_dict.update(create_dict)
         else:
-            pass
-    return snp_dict, indel_dict, del_dict, transition_dict
+            logger.warning('variant found that is not an indel or snp {0}:{1}{2}>{3}'.format(record.CHROM,  record.POS, record.REF, record.ALT))
+    return total_dict, snp_dict, indel_dict
+#        elif record.is_transition:
+#            create_dict = multi_allelic(record.CHROM, record.POS, record.REF, record.ALT, record.samples[0]['GT'],
+#                                        record.samples[0]['AD'], record.samples[0]['DP'], logger)
+#            del_dict.update(create_dict)
+#        elif record.is_deletion:
+#            create_dict = multi_allelic(record.CHROM, record.POS, record.REF, record.ALT, record.samples[0]['GT'],
+#                                        record.samples[0]['AD'], record.samples[0]['DP'], logger)
+#            transition_dict.update(create_dict)
+#        else:
+#            pass
+
     
 
 def compute_AF(AD, DP):
@@ -50,7 +56,7 @@ def compute_AF(AD, DP):
     return float(AF)
 
 
-def multi_allelic(chrom, pos, ref, alt_list, GT, AD, DP):
+def multi_allelic(chrom, pos, ref, alt_list, GT, AD, DP, logger):
     var_dict = defaultdict(list)
     if alt_list[0] !=  None:
         if len(alt_list) == 1:
@@ -82,9 +88,4 @@ def multi_allelic(chrom, pos, ref, alt_list, GT, AD, DP):
 
 
 if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('-v', dest='vcf_file',
-                        help='excel file from workbench export', required=True)
-    args = parser.parse_args()
-    main(args.vcf_file)
+    main(vcf_file, logger)

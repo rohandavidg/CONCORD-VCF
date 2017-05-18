@@ -29,7 +29,7 @@ def main(total_dict1, total_dict2, check_name, logger):
         get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0.5, check_name)
 
 def compare_vcf(new_dict, old_dict, analysis_check, logger):
-    with open( analysis_check + '_variants_log.txt', 'w') as fout:
+    with open(analysis_check + '_variants_log.txt', 'w') as fout, open (analysis_check + '_First_input_variant_missing_list.txt', 'w') as vout, open(analysis_check + '_second_input_variant_missing_list.txt', 'w') as sout:
         overlap = 0
         new_vcf_unique = 0
         old_vcf_unique = 0
@@ -41,17 +41,21 @@ def compare_vcf(new_dict, old_dict, analysis_check, logger):
                     overlap += 1
                 else:
                     new_vcf_unique += 1
+                    vout.write(k + '\n')
             except KeyError:
                 new_vcf_unique += 1
-                
+                vout.write(k + '\t' + "\t".join(str(i) for i in v) + '\n')
+
         for k, v in old_dict.items():
             try:
                 if new_dict[k]:
                     pass
-                else:
+                else:                        
                     old_vcf_unique += 1
+                    sout.write(k + '\n')
             except KeyError:
                 old_vcf_unique += 1
+                sout.write(k +  '\t' + "\t".join(str(i) for i in v) + '\n')
 
         print "overlap: " + str(overlap)
         fout.write("Total variants that overlap with 1st input and 2nd input " + str(overlap) + "\n")
