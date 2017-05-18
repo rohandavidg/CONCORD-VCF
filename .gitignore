@@ -2,3 +2,6 @@
 tests
 *.log
 *.csv
+*.png
+*.csv
+*.txt

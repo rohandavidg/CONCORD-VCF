@@ -36,7 +36,7 @@ def plot_freq(dict1, dict2, logger):
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
     ax1.scatter(fi_df.index, fi_df['frequency'], color='r', marker= 'x', s=100, label='FIRST VCF INPUT')
-    ax1.scatter(si_df.index, si_df['frequency'], color='g', marker='+', s=200, label='SECOND VCF INPUT')
+    ax1.scatter(si_df.index, si_df['frequency'], color='g', marker='o', s=200, label='SECOND VCF INPUT')
     plt.legend(loc='upper left')
     ax1.set_title('Variant frequency correlation', fontsize=20)
     annotate = fi_df['position'].tolist()
@@ -57,7 +57,7 @@ def plot_dp(dict1, dict2, logger):
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
     ax1.scatter(fi_df['DP'], fi_df['frequency'], color='r', marker= 'x', s=100, label='FIRST VCF INPUT')
-    ax1.scatter(si_df['DP'], si_df['frequency'], color='g', marker='+', s=200, label='SECOND VCF INPUT')
+    ax1.scatter(si_df['DP'], si_df['frequency'], color='g', marker='o', s=200, label='SECOND VCF INPUT')
     plt.legend(loc='upper left')
     ax1.set_title('Variant frequency correlation', fontsize=20)
     annotate = fi_df['position'].tolist()
@@ -66,6 +66,14 @@ def plot_dp(dict1, dict2, logger):
     texts = []
     for i, txt in enumerate(annotate):
         texts.append(ax1.text(index[i],freq[i], txt, rotation=45))
+    else:
+        pass
+    si_annotate = si_df['position'].tolist()
+    si_index = si_df['DP'].tolist()
+    si_freq = si_df['frequency'].tolist()
+    si_texts = []
+    for i, txt in enumerate(si_annotate):
+        si_texts.append(ax1.text(si_index[i], si_freq[i], txt, rotation=45))
     else:
         pass
     ax1.set_xlabel('DP', fontsize=20)
