@@ -14,6 +14,7 @@ from do_logging import configure_logger
 from csv_to_dict import parse_csv
 import pandas as pd
 import plot_dict
+import plot_allele_freq
 
 log_filename = "CONCORD-VCF"
 
@@ -23,8 +24,12 @@ def main(excel_file_1, sample_name_1, excel_file_2, sample_name_2):
     csv_file_2 = parse_excel_template(sample_name_2, excel_file_2, logger)
     vcf_dict_1, SNP_dict_1, indel_dict_1 = parse_csv(csv_file_1)
     vcf_dict_2, SNP_dict_2, indel_dict_2 = parse_csv(csv_file_2)
-    plot_total = plot_dict.main(vcf_dict_1, vcf_dict_2, logger)
-    
+    plot_total = plot_dict.main(vcf_dict_1, vcf_dict_2, "total", logger)
+    plot_allele_frequency = plot_allele_freq.main(vcf_dict_1, vcf_dict_2, logger)
+    if SNP_dict_1 and SNP_dict_2:
+        plot_SNP = plot_dict.main(SNP_dict_1, SNP_dict_2, "SNP", logger)
+    if indel_dict_1 and indel_dict_2:
+        plot_indel = plot_dict.main(indel_dict_1, indel_dict_2, "INDEL", logger)
 
 class convert_excel:
 
@@ -32,7 +37,7 @@ class convert_excel:
         self.index = int(index)
         self.excel_file = excel_file
         print self.excel_file
-        self.wb = openpyxl.load_workbook(self.excel_file, read_only=True, data_only=True)
+        self.wb = openpyxl.load_workbook(self.excel_file, read_only=True)
         self.csv_file = open(csv_file,'wb')
         self.writer = csv.writer(self.csv_file, delimiter='\t')
 
@@ -47,7 +52,7 @@ class convert_excel:
         c = self.writer
         for r in self.ws.rows:
             try:
-                c.writerow([str(cell.value) for cell in r if cell.value and cell.value != '' ])
+                c.writerow([str(cell.value) for cell in r])
             except UnicodeEncodeError:
                 pass
 

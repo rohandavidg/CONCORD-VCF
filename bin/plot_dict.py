@@ -17,19 +17,19 @@ import scipy.stats as stats
 import logging
 
 
-def main(total_dict1, total_dict2, logger):
-    VCF_overlap, first_vcf_unique, second_vcf_unique = compare_vcf(total_dict1, total_dict2, logger)
+def main(total_dict1, total_dict2, check_name, logger):
+    VCF_overlap, first_vcf_unique, second_vcf_unique = compare_vcf(total_dict1, total_dict2, check_name, logger)
     if second_vcf_unique > 0 and first_vcf_unique > 0:
-        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique,0.5, 0.5)
+        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique,0.5, 0.5, check_name)
     elif second_vcf_unique == 0 and first_vcf_unique == 0:
-        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0)
+        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0, check_name)
     elif second_vcf_unique == 0 and first_vcf_unique > 0:
-        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0.5, 0)
+        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0.5, 0, check_name)
     else:
-        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0.5)
+        get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0.5, check_name)
 
-def compare_vcf(new_dict, old_dict, logger):
-    with open('Total_variants_log.txt', 'w') as fout:
+def compare_vcf(new_dict, old_dict, analysis_check, logger):
+    with open( analysis_check + '_variants_log.txt', 'w') as fout:
         overlap = 0
         new_vcf_unique = 0
         old_vcf_unique = 0
@@ -66,7 +66,7 @@ def compare_vcf(new_dict, old_dict, logger):
 
 
 
-def plot_differences(overlap, new_vcf_unique, old_vcf_unique, new_error_size, old_error_size):
+def plot_differences(overlap, new_vcf_unique, old_vcf_unique, new_error_size, old_error_size, analysis_name):
     overlap_text = str(overlap) + " overlapping"
     new_vcf_txt = str(new_vcf_unique) + " unique first var"
     old_vcf_txt = str(old_vcf_unique) + " unique second var"
@@ -93,7 +93,7 @@ def plot_differences(overlap, new_vcf_unique, old_vcf_unique, new_error_size, ol
     plt.annotate('2nd VCF INPUT', xy = v.get_label_by_id('01').get_position(), xytext = (30,-70), size = 'xx-large',
                  ha = 'center', textcoords = 'offset points', bbox = dict(boxstyle = 'round, pad = 0.5', fc = 'lime', alpha = 0.3),
                  arrowprops = dict(arrowstyle = '->', connectionstyle = 'arc3,rad = -0.5',color = 'gray'))
-    plt.savefig("TOTAL_VCF_VARIANT_CHECK.png")
+    plt.savefig(analysis_name + "_VCF_VARIANT_CHECK.png")
 
 
 if __name__ == "__main__":

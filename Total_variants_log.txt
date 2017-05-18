@@ -1,4 +1,0 @@
-Total variants that overlap with 1st input and 2nd input 42
-unique only to 1st vcf input: 0
-Total variants in 2nd vcf input: 42
-unique only to 2nd vcf input: 0
