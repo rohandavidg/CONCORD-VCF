@@ -18,14 +18,15 @@ import plot_allele_freq
 
 log_filename = "CONCORD-VCF"
 
-def main(excel_file_1, sample_name_1, excel_file_2, sample_name_2):
+def main(excel_file_1, sample_name_1, excel_file_2, sample_name_2, annotate_plot):
     logger = configure_logger(log_filename)
     csv_file_1 = parse_excel_template(sample_name_1, excel_file_1, logger)
     csv_file_2 = parse_excel_template(sample_name_2, excel_file_2, logger)
     vcf_dict_1, SNP_dict_1, indel_dict_1 = parse_csv(csv_file_1)
     vcf_dict_2, SNP_dict_2, indel_dict_2 = parse_csv(csv_file_2)
     plot_total = plot_dict.main(vcf_dict_1, vcf_dict_2, "total", logger)
-    plot_allele_frequency = plot_allele_freq.main(vcf_dict_1, vcf_dict_2, logger)
+    print annotate_plot
+    plot_allele_frequency = plot_allele_freq.main(vcf_dict_1, vcf_dict_2, annotate_plot, logger)
     if SNP_dict_1 and SNP_dict_2:
         plot_SNP = plot_dict.main(SNP_dict_1, SNP_dict_2, "SNP", logger)
     if indel_dict_1 and indel_dict_2:
@@ -88,6 +89,9 @@ if __name__  ==  "__main__":
                         help='excel file from workbench export', required=True)
     parser.add_argument('-SS', dest='sample_name_2',
                         help='name of the sample or vcf in the excel file', required=True)
+    parser.add_argument('-a', dest='annotate_plot', action="store_true",
+                        help='flag to turn on or turn off plot annotation with varaint')
     args = parser.parse_args()
-    main(args.excel_file_1, args.sample_name_1, args.excel_file_2, args.sample_name_2)
+    main(args.excel_file_1, args.sample_name_1, args.excel_file_2, 
+         args.sample_name_2, args.annotate_plot)
     
