@@ -26,11 +26,13 @@ def main(excel_file_1, sample_name_1, excel_file_2, sample_name_2, annotate_plot
     vcf_dict_2, SNP_dict_2, indel_dict_2 = parse_csv(csv_file_2)
     plot_total = plot_dict.main(vcf_dict_1, vcf_dict_2, "total", logger)
     print annotate_plot
-    plot_allele_frequency = plot_allele_freq.main(vcf_dict_1, vcf_dict_2, annotate_plot, logger)
+    plot_allele_frequency = plot_allele_freq.main(vcf_dict_1, vcf_dict_2, sample_name_1, sample_name_2, annotate_plot, logger)
     if SNP_dict_1 and SNP_dict_2:
         plot_SNP = plot_dict.main(SNP_dict_1, SNP_dict_2, "SNP", logger)
     if indel_dict_1 and indel_dict_2:
         plot_indel = plot_dict.main(indel_dict_1, indel_dict_2, "INDEL", logger)
+
+
 
 class convert_excel:
 

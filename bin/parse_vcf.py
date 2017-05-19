@@ -66,6 +66,7 @@ def convert_vcf_format(vcf_file, logger):
     cmd2 = vcf_fixup + " " + outfile1 + " > " + outfile2
     print cmd2
     p2 = subprocess.Popen(cmd2, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out2 = p2.communicate()
     print outfile2
     return outfile2
 
