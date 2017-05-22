@@ -21,6 +21,10 @@ PYTHON="/dlmp/sandbox/cgslIS/rohan/Python-2.7.11/python"
 ANNOTATE_PLOT_WITH_VARIANT_POSITION=""
 
 
+#plink
+PLINK="/usr/local/biotools/plink/1.9/plink"
+
+
 #VCF type
 MULTISAMPLE=""
 BIOR_ANNOTATED=""

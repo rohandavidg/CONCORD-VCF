@@ -105,9 +105,11 @@ def plot_dp_bar(dict1, dict2, sample_name1, sample_name2,annotate, logger):
 def plot_violin_af(dict1, dict2, sample_name1, sample_name2,annotate, logger):
     fi_df, si_df = dict_to_dataframe(dict1, dict2, logger)
     if len(fi_df['frequency']) == len(si_df['frequency']):
+        df = pd.DataFrame({sample_name1: fi_df['frequency'], sample_name2: si_df['frequency']})
+#        df = pd.concat([fi_df['frequency'], si_df['frequency']], 
         fig = plt.figure(figsize=(20,16))
         sns.set(font_scale=1.8)
-        ax = sns.violinplot([fi_df['frequency'],si_df['frequency']],horizontal=False)
+        ax = sns.violinplot(df)
         ax.set(xlabel='frequency', ylabel='sample')
         plt.savefig(sample_name1 + "_" + sample_name2 +'_Allele_frequency_distribution.png')
     else:
