@@ -18,12 +18,16 @@ import logging
 import seaborn as sns
 
 
+#TODO: Dataframe for GATK
 def main(dict1, dict2, sample_name1, sample_name2, annotate,logger):
     plot_freq(dict1, dict2,sample_name1, sample_name2, annotate, logger)
     plot_dp_AF(dict1, dict2, sample_name1, sample_name2,annotate, logger)
     plot_dp_bar(dict1, dict2, sample_name1, sample_name2,annotate, logger)
     plot_violin_af(dict1, dict2, sample_name1, sample_name2,annotate, logger)
     plot_dist_af(dict1, dict2, sample_name1, sample_name2,annotate, logger)
+    plot_dist_dp(dict1, dict2, sample_name1, sample_name2,annotate, logger)
+    plot_af(dict1, dict2, sample_name1, sample_name2,annotate, logger)
+
 
 def dict_to_dataframe(dict1, dict2, logger):
     fi_df = pd.DataFrame(dict1.items(), columns=['position', 'value'])
@@ -45,6 +49,29 @@ def dict_to_dataframe_gatk(dict1, dict2, logger):
     return fi_df, si_df
 
 
+def plot_af(dict1, dict2, sample_name1, sample_name2,annotate, logger):
+    fi_df, si_df = dict_to_dataframe(dict1, dict2, logger)
+    fig = plt.figure(figsize=(20,16))
+    ax1 = fig.add_subplot(1,1,1)
+    fi_df = fi_df.sort_index(by=['frequency'], ascending=[True])
+    x1 = np.linspace(0, 1, len(fi_df['frequency']))
+    si_df = si_df.sort_index(by=['frequency'],ascending=[True])
+    x2 = np.linspace(0, 1, len(si_df['frequency']))
+    ax1.scatter(x1, fi_df['frequency'], color='k', marker='x', s=350, vmin=0.,vmax=0.6,label=sample_name1)
+    ax1.scatter(x2, si_df['frequency'], color='g', marker='o', s=200, vmin=0.,vmax=0.6,label=sample_name2)
+    plt.legend(loc='upper right')
+    if annotate:
+        annotate_plot(fi_df, ax1, 'total')
+        annotate_plot(si_df, ax1, 'total')
+    ax1.set_title('Variant frequency correlation', fontsize=20)
+    ax1.set_xlabel('Total Variants', fontsize=20)
+    ax1.set_ylabel('Variant frequency', fontsize=20)
+#    try:
+    plt.savefig(sample_name1 +'_Allele_frequency_' + sample_name2 + '.png')
+#    except ValueError:
+#        logger.debug("turn off annotation too many variants for plots")
+#TODO:dataframe for GATK
+
 def plot_freq(dict1, dict2, sample_name1, sample_name2,annotate, logger):
     fi_df, si_df = dict_to_dataframe(dict1, dict2, logger)
     fig = plt.figure(figsize=(20,16))
@@ -58,18 +85,14 @@ def plot_freq(dict1, dict2, sample_name1, sample_name2,annotate, logger):
     ax1.set_title('Variant frequency correlation', fontsize=20)
     ax1.set_xlabel('Total Variants', fontsize=20)
     ax1.set_ylabel('Variant frequency', fontsize=20)
-#    try:
     plt.savefig('Allele_frequency_total_variants.png')
-#    except ValueError:
-#        logger.debug("turn off annotation too many variants for plots")
-#TODO:dataframe for GATK
 
 
 def plot_dp_AF(dict1, dict2, sample_name1, sample_name2,annotate, logger):
     fi_df, si_df = dict_to_dataframe(dict1, dict2, logger)
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
-    ax1.scatter(fi_df['DP'], fi_df['frequency'], color='r', marker='x', s=350, vmin=0., vmax=0.6, label=sample_name1)
+    ax1.scatter(fi_df['DP'], fi_df['frequency'], color='k', marker='x', s=350, vmin=0., vmax=0.6, label=sample_name1)
     ax1.scatter(si_df['DP'], si_df['frequency'], color='g', marker='o', s=200, vmin=0., vmax=0.6, label=sample_name2)
     plt.legend(loc='upper left')
     if annotate:
@@ -128,12 +151,24 @@ def plot_dist_af(dict1, dict2, sample_name1, sample_name2,annotate, logger):
     ax1 = sns.distplot(fi_df.frequency.dropna())
     ax1.set(xlabel='frequency', ylabel='sample')
     ax1.set_title("sample " + sample_name1)
-    plt.savefig(sample_name1 + '_Allele_frequency_distribution_dist.png')
     ax2 = sns.distplot(si_df.frequency.dropna())
     ax2.set(xlabel='frequency', ylabel='sample')
     ax2.set_title(sample_name1 + " vs " + sample_name2)
     plt.savefig(sample_name2 + '_Allele_frequency_distribution_dist.png')
 
+
+def plot_dist_dp(dict1, dict2, sample_name1, sample_name2,annotate, logger):
+    fi_df, si_df = dict_to_dataframe(dict1, dict2, logger)
+    fig = plt.figure(figsize=(20,16))
+    sns.set(font_scale=1.8)
+    ax1 = sns.distplot(fi_df['DP'].dropna())
+    ax1.set(xlabel='DP', ylabel='sample')
+    ax1.set_title("sample " + sample_name1)
+    ax2 = sns.distplot(si_df['DP'].dropna())
+    ax2.set(xlabel='DP', ylabel='sample')
+    ax2.set_title(sample_name1 + " vs " + sample_name2)
+    plt.savefig(sample_name2 + '_DP_dist.png')
+    
 
 
 def annotate_plot(some_df, plot, total=False):

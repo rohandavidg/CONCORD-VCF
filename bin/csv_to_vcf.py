@@ -17,15 +17,18 @@ warnings.filterwarnings("ignore")
 import time
 import datetime
 import subprocess
+from operator import itemgetter
 
 today = datetime.date.today()
 today_date = str(today).replace("-","")
 vcf_fixup = "/biotools/biotools/vcflib/2015_3_20/bin/vcffixup"
+vcf_sort = "/usr/local/biotools/vcftools/0.1.8a/bin/vcf-sort"
 
 def main(csv_file, sample_name):
     csv_dict = parse_csv(csv_file)
-    order_dict = OrderedDict(sorted(csv_dict.items()))
-    vcf_file = dict_to_vcf(order_dict, sample_name)
+#    order_dict = OrderedDict(sorted(csv_dict.items(), key=itemgetter([0][0]))
+#    order_dict = ordered_dict(csv_dict)
+    vcf_file = dict_to_vcf(csv_dict, sample_name)
     fix_vcf = fix_fake_vcf(vcf_file) 
 
     
@@ -50,6 +53,12 @@ def parse_csv(csv_file):
     return all_dict
 
 
+def ordered_dict(all_dict):
+    new_dict = {}
+    for k, v in sorted(all_dict.items()):
+        print v[0][0]
+
+
 def dict_to_vcf(some_csv_dict, sample_name):
     outfile = sample_name + ".vcf"
     with open(outfile, 'w') as fout:
@@ -63,18 +72,21 @@ def dict_to_vcf(some_csv_dict, sample_name):
         fout.write('##FORMAT=<ID=AD,Number=.,Type=Integer,Description="Allelic depth, number of filtered reads supporting the alleles where the first element represents the reference and subsequent elements represent the alternatives in the order listed in the ALT column">\n')
         fout.write('#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t' + sample_name + " (Variants)\n")
         for k, v in some_csv_dict.items():
-            fout.write(str(v[0][0]) + '\t' + str(k) + "\t." + "\t" + str(v[0][1]) +'\t' + v[0][2] + "\t.\t.\t.\t" + "GT:AD:DP\t" + compute_gt(v[0][4]) +":"+ str(v[0][3])+":" +  str(v[0][5]) + '\n')
+            fout.write(str(v[0][0]) + '\t' + str(k) + "\t." + "\t" + str(v[0][1]) +'\t' + v[0][2] + "\t.\t.\t.\t" + "GT:AD:DP\t" + compute_gt(v[0][4]) + ":" + str(get_ref_allele(v[0][3], v[0][5]))+ "," +str(v[0][3]) + ":" +  str(v[0][5]) + '\n')
     return outfile
 
 
 def fix_fake_vcf(vcf_file):
     new_outfile = vcf_file.split(".")[0] + "_cmb.vcf"
-    cmd2 = vcf_fixup + " " + vcf_file + " > " + new_outfile 
+    cmd2 = vcf_fixup + " " + vcf_file + " | " + vcf_sort +  ' -c > ' + new_outfile 
     print cmd2
     p2 = subprocess.Popen(cmd2, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out2 = p2.communicate()
     
 
+def get_ref_allele(ref, DP):
+    REF_DP = DP - ref
+    return REF_DP
 
 
 def compute_gt(AF):
