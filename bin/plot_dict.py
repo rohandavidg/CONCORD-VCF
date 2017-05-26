@@ -17,33 +17,41 @@ import scipy.stats as stats
 import logging
 import shlex
 
-def main(total_dict1, total_dict2, total_dict3, total_dict4,
-         sample_name1, sample_name2, sample_name3, sample_name4,
-         check_name, logger):
+def main(total_dict1, total_dict2, sample_name1, sample_name2, check_name, logger, total_dict3=False, 
+         total_dict4=False, sample_name3=False, sample_name4=False):
+    plot_venn = compare_vcf(total_dict1, total_dict2, total_dict3, total_dict4,
+                            sample_name1, sample_name2, sample_name3, sample_name4,
+                            check_name, logger)
 
 
 def compare_vcf(first_dict, second_dict, third_dict, fouth_dict, 
                 sample_name1, sample_name2, sample_name3, sample_name4,
                 analysis_check, logger):
     sample1_sample2_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name2 + ".txt"
-    sample1_sample3_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name3 + ".txt"
-    sample1_sample4_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name4 + ".txt"
-    sample2_sample3_outfile = "Total_missing_report_" + sample_name2 + "_"+ sample_name3 + ".txt"
-    sample2_sample4_outfile = "Total_missing_report_" + sample_name2 + "_"+ sample_name4 + ".txt"
-    sample3_sample4_outfile = "Total_missing_report_" + sample_name3 + "_"+ sample_name4 + ".txt"
-    sample1_sample2_overlap, samplel_unique, sample2_unique = check_missing_in_dict(first_dict, second_dict, sample_name1, sample_name2, sample1_sample2_outfile)
+    sample1_sample2_overlap, samplel_unique, sample2_unique = check_missing_in_dict(first_dict, second_dict, analysis_check,
+                                                                                    sample_name1, sample_name2, sample1_sample2_outfile)
     create_venn_plots(sample1_sample2_overlap, samplel_unique, sample2_unique, analysis_check, sample_name1, sample_name2, logger)
     if third_dict:
-        sample1_sample3_overlap, samplel_unique, sample3_unique = check_missing_in_dict(first_dict, third_dict, sample_name1, sample_name3, sample1_sample3_outfile)
+        sample1_sample3_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name3 + ".txt"
+        sample2_sample3_outfile = "Total_missing_report_" + sample_name2 + "_"+ sample_name3 + ".txt"
+        sample1_sample3_overlap, samplel_unique, sample3_unique = check_missing_in_dict(first_dict, third_dict, sample_name1, analysis_check,
+                                                                                        sample_name3, sample1_sample3_outfile)
         create_venn_plots(sample1_sample3_overlap, samplel_unique, sample3_unique, analysis_check, sample_name1, sample_name3, logger)
-        sample2_sample3_overlap, sample2_unique, sample3_unique= check_missing_in_dict(second_dict, third_dict, sample_name2, sample_name3, sample2_sample3_outfile)
+        sample2_sample3_overlap, sample2_unique, sample3_unique= check_missing_in_dict(second_dict, third_dict, analysis_check,
+                                                                                       sample_name2, sample_name3, sample2_sample3_outfile)
         create_venn_plots(sample2_sample3_overlap, sample2_unique, sample3_unique, analysis_check, sample_name2, sample_name3, logger)
     if fouth_dict:
-        sample1_sample4_overlap, samplel_unique, sample4_unique = check_missing_in_dict(first_dict, fourth_dict, sample_name1, sample_name4, sample1_sample4_outfile)
+        sample2_sample4_outfile = "Total_missing_report_" + sample_name2 + "_"+ sample_name4 + ".txt"
+        sample1_sample4_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name4 + ".txt"
+        sample3_sample4_outfile = "Total_missing_report_" + sample_name3 + "_"+ sample_name4 + ".txt"
+        sample1_sample4_overlap, samplel_unique, sample4_unique = check_missing_in_dict(first_dict, fourth_dict, analysis_check,
+                                                                                        sample_name1, sample_name4, sample1_sample4_outfile)
         create_venn_plots(sample1_sample4_overlap, sample1_unique, sample4_unique, analysis_check, sample_name1, sample_name4, logger)
-        sample2_sample4_overlap, sample2_unique, sample4_unique = check_missing_in_dict(second_dict, fourth_dict, sample_name2, sample_name4, sample2_sample4_outfile)
+        sample2_sample4_overlap, sample2_unique, sample4_unique = check_missing_in_dict(second_dict, fourth_dict, analysis_check,
+                                                                                        sample_name2, sample_name4, sample2_sample4_outfile)
         create_venn_plots(sample2_sample4_overlap, sample2_unique, sample4_unique, analysis_check, sample_name2, sample_name4, logger)
-        sample3_sample4_overlap, sample4_unique, sample4_unique = check_missing_in_dict(third_dict, fourth_dict, sample_name3, sample_name4, sample3_sample4_outfile)
+        sample3_sample4_overlap, sample4_unique, sample4_unique = check_missing_in_dict(third_dict, fourth_dict, analysis_check,
+                                                                                        sample_name3, sample_name4, sample3_sample4_outfile)
         create_venn_plots(sample3_sample4_overlap, sample3_unique, sample4_unique, analysis_check, sample_name3, sample_name4, logger)
 
 
@@ -60,8 +68,8 @@ def create_venn_plots(VCF_overlap, first_vcf_unique, second_vcf_unique, check_na
         get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0.8, 1.1,check_name, sample1, sample2)
 
 
-def check_missing_in_dict(some_dict1, some_dict2, sample_name1, sample_name2,  outfile):
-    with open(analysis_check + '_variants_log.txt', 'wa+') as fout, open(outfile , 'w') as fout:
+def check_missing_in_dict(some_dict1, some_dict2, sample_name1, sample_name2,analysis_check,  outfile):
+    with open(analysis_check + '_variants_log.txt', 'wa+') as fout, open(outfile , 'w') as tout:
         overlap = 0
         first_vcf_unique = 0
         second_vcf_unique = 0
@@ -78,13 +86,13 @@ def check_missing_in_dict(some_dict1, some_dict2, sample_name1, sample_name2,  o
                 first_vcf_unique += 1
                 fout.write('Genomic' + '\t' +  str(k) + '\t' + "\t".join(str(i) for i in v).strip('[]') + '\n')
         print "overlap: " + str(overlap)
-        fout.write("Total variants that overlap with {0} and {1} is {2}".format(sample_name1, sample_name2, str(overlap)) + "\n")
+        tout.write("Total variants that overlap with {0} and {1} is {2}".format(sample_name1, sample_name2, str(overlap)) + "\n")
         print "Total variant in " + sample_name1 +  " vcf input: " + str(first_variants)
-        fout.write("unique only to " + sample_name1 + " vcf input: " + str(first_vcf_unique) + '\n')
+        tout.write("unique only to " + sample_name1 + " vcf input: " + str(first_vcf_unique) + '\n')
         print "unique only to " + sample_name1 +" vcf input: " + str(first_vcf_unique)
-        fout.write("Total variants in "+ sample_name2 + " input: " + str(second_variants) + '\n')
+        tout.write("Total variants in "+ sample_name2 + " input: " + str(second_variants) + '\n')
         print "Total variant in " + sample_name2 + " input: " + str(second_variants)
-        fout.write("unique only to " + sample_name2 + " input: " + str(second_vcf_unique) + '\n')
+        tout.write("unique only to " + sample_name2 + " input: " + str(second_vcf_unique) + '\n')
         print "unique only to " + sample_name2 + " " + str(second_vcf_unique)
         return overlap, first_vcf_unique, second_vcf_unique
 

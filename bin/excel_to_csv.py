@@ -18,8 +18,7 @@ import plot_allele_freq
 
 
 def main(excel_file, sample_name, logger):
-    logger = configure_logger(log_filename)
-    csv_file = parse_excel_template(sample_name, excel_file, logger)
+    csv_file = parse_excel_template(excel_file, sample_name, logger)
     return csv_file
 
 
@@ -57,10 +56,11 @@ class convert_excel:
         return os.remove(csv_file)
 
 
-def parse_excel_template(file_name, excel_workbook, logger):
-    outfile = file_name + ".csv"
+def parse_excel_template(excel_workbook, sample_name, logger):
+    outfile = sample_name + ".csv"
+    print outfile
     create_csv_file = convert_excel(excel_workbook, outfile, 0)
-    logger.info('creating a csv from excel file with name {0}'.format(file_name))
+    logger.info('creating a csv from excel file with name {0}'.format(sample_name))
     new_csv_file = create_csv_file.write_csv()
     create_csv_file.close()
     logger.debug('failed creating excel file, check excel for errors')
