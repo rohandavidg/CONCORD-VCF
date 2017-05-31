@@ -28,14 +28,14 @@ def compare_vcf(first_dict, second_dict, third_dict, fouth_dict,
                 sample_name1, sample_name2, sample_name3, sample_name4,
                 analysis_check, logger):
     sample1_sample2_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name2 + ".txt"
-    sample1_sample2_overlap, samplel_unique, sample2_unique = check_missing_in_dict(first_dict, second_dict, analysis_check,
-                                                                                    sample_name1, sample_name2, sample1_sample2_outfile)
+    sample1_sample2_overlap, samplel_unique, sample2_unique = check_missing_in_dict(first_dict, second_dict, 
+                                                                                    sample_name1, sample_name2, analysis_check, sample1_sample2_outfile)
     create_venn_plots(sample1_sample2_overlap, samplel_unique, sample2_unique, analysis_check, sample_name1, sample_name2, logger)
     if third_dict:
         sample1_sample3_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name3 + ".txt"
         sample2_sample3_outfile = "Total_missing_report_" + sample_name2 + "_"+ sample_name3 + ".txt"
-        sample1_sample3_overlap, samplel_unique, sample3_unique = check_missing_in_dict(first_dict, third_dict, sample_name1, analysis_check,
-                                                                                        sample_name3, sample1_sample3_outfile)
+        sample1_sample3_overlap, samplel_unique, sample3_unique = check_missing_in_dict(first_dict, third_dict, sample_name1,
+                                                                                        sample_name3, analysis_check, sample1_sample3_outfile)
         create_venn_plots(sample1_sample3_overlap, samplel_unique, sample3_unique, analysis_check, sample_name1, sample_name3, logger)
         sample2_sample3_overlap, sample2_unique, sample3_unique= check_missing_in_dict(second_dict, third_dict, analysis_check,
                                                                                        sample_name2, sample_name3, sample2_sample3_outfile)
@@ -44,8 +44,9 @@ def compare_vcf(first_dict, second_dict, third_dict, fouth_dict,
         sample2_sample4_outfile = "Total_missing_report_" + sample_name2 + "_"+ sample_name4 + ".txt"
         sample1_sample4_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name4 + ".txt"
         sample3_sample4_outfile = "Total_missing_report_" + sample_name3 + "_"+ sample_name4 + ".txt"
-        sample1_sample4_overlap, samplel_unique, sample4_unique = check_missing_in_dict(first_dict, fourth_dict, analysis_check,
-                                                                                        sample_name1, sample_name4, sample1_sample4_outfile)
+        sample1_sample4_overlap, samplel_unique, sample4_unique = check_missing_in_dict(first_dict, fourth_dict, 
+                                                                                        sample_name1, sample_name4,analysis_check,
+                                                                                        sample1_sample4_outfile)
         create_venn_plots(sample1_sample4_overlap, sample1_unique, sample4_unique, analysis_check, sample_name1, sample_name4, logger)
         sample2_sample4_overlap, sample2_unique, sample4_unique = check_missing_in_dict(second_dict, fourth_dict, analysis_check,
                                                                                         sample_name2, sample_name4, sample2_sample4_outfile)
