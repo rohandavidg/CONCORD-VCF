@@ -56,7 +56,7 @@ def dict_to_dataframe_gatk(dict1, dict2, logger):
 
 def plot_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
             dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, ddict1, logger)
+    fi_df = dict_to_dataframe(dict1, logger)
     si_df = dict_to_dataframe(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
@@ -165,8 +165,8 @@ def plot_dp_bar(dict1, dict2, sample_name1, sample_name2,annotate, logger,
 
 def plot_violin_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                    dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1,ddict1, logger)
-    si_df = dict_to_dataframe(dict1, ddict2,logger)
+    fi_df = dict_to_dataframe(dict1, logger)
+    si_df = dict_to_dataframe(dict2, logger)
     if len(fi_df['frequency']) == len(si_df['frequency']):
         df = pd.DataFrame({sample_name1: fi_df['frequency'], sample_name2: si_df['frequency']})
 #        df = pd.concat([fi_df['frequency'], si_df['frequency']], 
@@ -192,7 +192,7 @@ def plot_violin_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
 
 def plot_dist_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                  dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, ddict1,logger)
+    fi_df = dict_to_dataframe(dict1, logger)
     si_df = dict_to_dataframe(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     sns.set(font_scale=1.8)
