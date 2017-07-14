@@ -51,8 +51,6 @@ def main(excel_file_1, sample_name_1,
         print "ERROR: open and save excel sheet as .xlxs"
         sys.exit()
 
-
-
 def def_check_sample_name(sample_name_1, sample_name_2, sample_name_3,sample_name_4, logger):
     sample_list = [sample_name_1, sample_name_2, sample_name_3, sample_name_4]
     seen = set([x for x in sample_list if sample_list.count(x) > 1])

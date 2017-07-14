@@ -29,7 +29,9 @@ def compare_vcf(first_dict, second_dict, third_dict, fouth_dict,
                 analysis_check, logger):
     sample1_sample2_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name2 + ".txt"
     sample1_sample2_overlap, samplel_unique, sample2_unique = check_missing_in_dict(first_dict, second_dict, 
-                                                                                    sample_name1, sample_name2, analysis_check, sample1_sample2_outfile)
+                                                                                    sample_name1, sample_name2, analysis_check, 
+                                                                                    sample1_sample2_outfile)
+    print sample1_sample2_overlap
     create_venn_plots(sample1_sample2_overlap, samplel_unique, sample2_unique, analysis_check, sample_name1, sample_name2, logger)
     if third_dict:
         sample1_sample3_outfile = "Total_missing_report_" + sample_name1 + "_"+ sample_name3 + ".txt"
@@ -69,7 +71,7 @@ def create_venn_plots(VCF_overlap, first_vcf_unique, second_vcf_unique, check_na
         get_image = plot_differences(VCF_overlap, first_vcf_unique, second_vcf_unique, 0, 0.8, 1.1,check_name, sample1, sample2)
 
 
-def check_missing_in_dict(some_dict1, some_dict2, sample_name1, sample_name2,analysis_check,  outfile):
+def check_missing_in_dict(some_dict1, some_dict2, sample_name1, sample_name2, analysis_check,  outfile):
     with open(analysis_check + '_variants_log.txt', 'wa+') as fout, open(outfile , 'w') as tout:
         overlap = 0
         first_vcf_unique = 0
@@ -90,8 +92,15 @@ def check_missing_in_dict(some_dict1, some_dict2, sample_name1, sample_name2,ana
         tout.write("Total variants that overlap with {0} and {1} is {2}".format(sample_name1, sample_name2, str(overlap)) + "\n")
         print "Total variant in " + sample_name1 +  " vcf input: " + str(first_variants)
         tout.write("unique only to " + sample_name1 + " vcf input: " + str(first_vcf_unique) + '\n')
+        tout.write('variants in sample {0} are '.format(sample_name1) + '\n')
+        for k1, v1 in some_dict1.items():
+            tout.write('{0} - {1}' .format(k1, '\t'.join(str(i) for i in v1[0][:3])) + '\n')
         print "unique only to " + sample_name1 +" vcf input: " + str(first_vcf_unique)
         tout.write("Total variants in "+ sample_name2 + " input: " + str(second_variants) + '\n')
+        tout.write('variants in sample {0} are '.format(sample_name2) + '\n')
+#        tout.write('{0}'.format(some_dict2.keys()) + '\n')        
+        for k2, v2 in some_dict2.items():
+            tout.write('{0} - {1}' .format(k2, '\t'.join(str(i) for i in v2[0][:3])) + '\n')
         print "Total variant in " + sample_name2 + " input: " + str(second_variants)
         tout.write("unique only to " + sample_name2 + " input: " + str(second_vcf_unique) + '\n')
         print "unique only to " + sample_name2 + " " + str(second_vcf_unique)

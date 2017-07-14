@@ -44,6 +44,7 @@ class convert_excel:
         c = self.writer
         for r in self.ws.rows:
             try:
+#                c.writerow([str(cell.value) for cell in r if cell.value and cell.value != '' ])
                 c.writerow([str(cell.value) for cell in r])
             except UnicodeEncodeError:
                 pass
