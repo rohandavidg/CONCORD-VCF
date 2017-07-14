@@ -5,6 +5,7 @@ This script runs concordance for CLC
 samples
 """
 
+import sys
 import os
 import openpyxl
 import csv
@@ -58,12 +59,15 @@ class convert_excel:
 
 def parse_excel_template(excel_workbook, sample_name, logger):
     outfile = sample_name + ".csv"
-    print outfile
     create_csv_file = convert_excel(excel_workbook, outfile, 0)
     logger.info('creating a csv from excel file with name {0}'.format(sample_name))
     new_csv_file = create_csv_file.write_csv()
     create_csv_file.close()
-    logger.debug('failed creating excel file, check excel for errors')
+    if os.path.isfile(outfile):
+        logger.info('created a new file {0}'.format(outfile))
+    else:
+        logger.debug('excel file failed to create')
+        sys.exit()
     return outfile
 
 
