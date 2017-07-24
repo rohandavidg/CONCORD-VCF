@@ -12,7 +12,7 @@ from collections import defaultdict
 import pprint
 import parse_vcf
 import plot_dict
-import plot_allele_freq
+import plot_allele_freq_vcf
 
 
 
@@ -21,17 +21,31 @@ log_filename = "CONCORD-VCF"
 
 def main(VCF_file_1, sample_name_1,
          VCF_file_2, sample_name_2, 
-         annotate_plot, multisample, bior):
+         annotate_plot, multisample, 
+         bior):
     logger = configure_logger(log_filename)
-    VCF_file1_total, VCF_file1_SNP_dict, VCF_file1_indel_dict = parse_vcf.main(VCF_file_1, multisample, sample_name_1, bior,logger)
-    VCF_file2_total, VCF_file2_SNP_dict, VCF_file2_indel_dict = parse_vcf.main(VCF_file_2, multisample, sample_name_2, bior, logger)
-    plot_total = plot_dict.main(VCF_file1_total, VCF_file2_total, "total", logger)
+    VCF_file1_total, VCF_file1_SNP_dict, VCF_file1_indel_dict = parse_vcf.main(VCF_file_1, 
+                                                                               multisample, 
+                                                                               sample_name_1, 
+                                                                               bior,
+                                                                               logger)
+    VCF_file2_total, VCF_file2_SNP_dict, VCF_file2_indel_dict = parse_vcf.main(VCF_file_2, 
+                                                                               multisample, 
+                                                                               sample_name_2, 
+                                                                               bior, 
+                                                                               logger)
+    plot_total = plot_dict.main(VCF_file1_total, VCF_file2_total, sample_name_1, 
+                                sample_name_2, "total", logger)
     if VCF_file1_total:
-        plot_allele_frequency = plot_allele_freq.main(VCF_file1_total, VCF_file2_total, annotate_plot, logger)
+        plot_allele_frequency = plot_allele_freq_vcf.main(VCF_file1_total, VCF_file2_total,
+                                                          sample_name_1, sample_name_2, 
+                                                          annotate_plot, logger)
     if VCF_file1_SNP_dict and VCF_file2_SNP_dict:
-        plot_SNP = plot_dict.main(VCF_file1_SNP_dict, VCF_file2_SNP_dict, "SNP", logger)
+        plot_SNP = plot_dict.main(VCF_file1_SNP_dict, VCF_file2_SNP_dict, 
+                                  sample_name_1, sample_name_2, "SNP", logger)
     if VCF_file1_indel_dict and VCF_file2_indel_dict:
-        plot_indel = plot_dict.main(VCF_file1_indel_dict, VCF_file2_indel_dict, "INDEL", logger)
+        plot_indel = plot_dict.main(VCF_file1_indel_dict, VCF_file2_indel_dict,
+                                    sample_name_1, sample_name_2, "INDEL", logger)
     else:
         logger.debug('output missing')
 

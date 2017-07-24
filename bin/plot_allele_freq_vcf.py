@@ -53,8 +53,8 @@ def dict_to_dataframe_gatk(some_dict, logger):
 
 def plot_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
             dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, logger)
-    si_df = dict_to_dataframe(dict2, logger)
+    fi_df = dict_to_dataframe_gatk(dict1, logger)
+    si_df = dict_to_dataframe_gatk(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
     fi_df = fi_df.sort_index(by=['frequency'], ascending=[True])
@@ -64,11 +64,11 @@ def plot_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
     ax1.scatter(x1, fi_df['frequency'], color='k', marker='x', s=350, vmin=0.,vmax=0.6,label=sample_name1)
     ax1.scatter(x2, si_df['frequency'], color='g', marker='o', s=200, vmin=0.,vmax=0.6,label=sample_name2)
     if dict3:
-        ti_df = dict_to_dataframe(dict3, logger)
+        ti_df = dict_to_dataframe_gatk(dict3, logger)
         x3 = np.linspace(0, 1, len(si_df['ftiquency']))
         ax1.scatter(x1, ti_df['frequency'], color='b', marker='D', s=300, vmin=0.,vmax=0.6,label=sample_name3)        
     if dict4:
-        fo_df = dict_to_dataframe(dict4, logger)
+        fo_df = dict_to_dataframe_gatk(dict4, logger)
         x4 = np.linspace(0, 1, len(fo_df['ftiquency']))
         ax1.scatter(x4, fo_df['frequency'], color='m', marker='d', s=300, vmin=0.,vmax=0.6,label=sample_name4)            
     plt.legend(loc='upper right')
@@ -84,17 +84,17 @@ def plot_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
 
 def plot_freq(dict1, dict2, sample_name1, sample_name2,annotate, logger,
               dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, logger)
-    si_df = dict_to_dataframe(dict2, logger)
+    fi_df = dict_to_dataframe_gatk(dict1, logger)
+    si_df = dict_to_dataframe_gatk(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
     ax1.scatter(fi_df.index, fi_df['frequency'], color='r', marker='x', s=350, vmin=0.,vmax=0.6,label=sample_name1)
     ax1.scatter(si_df.index, si_df['frequency'], color='g', marker='o', s=200, vmin=0.,vmax=0.6,label=sample_name2)
     if dict3:
-        ti_df = dict_to_dataframe(dict3, logger)
+        ti_df = dict_to_dataframe_gatk(dict3, logger)
         ax1.scatter(ti_df.index, ti_df['frequency'], color='b', marker='D', s=300, vmin=0.,vmax=0.6,label=sample_name3)
     if dict4:
-        fo_df = dict_to_dataframe(dict4, logger)        
+        fo_df = dict_to_dataframe_gatk(dict4, logger)        
         ax1.scatter(fo_df.index, fo_df['frequency'], color='m', marker='d', s=300, vmin=0.,vmax=0.6,label=sample_name4)
     plt.legend(loc='upper left')
     if annotate:
@@ -108,17 +108,17 @@ def plot_freq(dict1, dict2, sample_name1, sample_name2,annotate, logger,
 
 def plot_dp_AF(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, logger)
-    si_df =  dict_to_dataframe(dict2, logger)
+    fi_df = dict_to_dataframe_gatk(dict1, logger)
+    si_df =  dict_to_dataframe_gatk(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
     ax1.scatter(fi_df['DP'], fi_df['frequency'], color='k', marker='x', s=350, vmin=0., vmax=0.6, label=sample_name1)
     ax1.scatter(si_df['DP'], si_df['frequency'], color='g', marker='o', s=200, vmin=0., vmax=0.6, label=sample_name2)
     if dict3:
-        ti_df = dict_to_dataframe(dict3, logger)
+        ti_df = dict_to_dataframe_gatk(dict3, logger)
         ax1.scatter(ti_df.index, ti_df['frequency'], color='b', marker='D', s=300, vmin=0.,vmax=0.6,label=sample_name3)
     if dict4:
-        fo_df = dict_to_dataframe(dict4, logger)
+        fo_df = dict_to_dataframe_gatk(dict4, logger)
         ax1.scatter(fo_df.index, fo_df['frequency'], color='m', marker='d', s=300, vmin=0.,vmax=0.6,label=sample_name4)
     plt.legend(loc='upper left')
     if annotate:
@@ -135,18 +135,18 @@ def plot_dp_AF(dict1, dict2, sample_name1, sample_name2,annotate, logger,
 
 def plot_dp_bar(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                 dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, logger)
-    si_df = dict_to_dataframe(dict2, logger)
+    fi_df = dict_to_dataframe_gatk(dict1, logger)
+    si_df = dict_to_dataframe_gatk(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
     width = 0.50
     reacts1 = ax1.bar(fi_df.index, fi_df['DP'], width, color='green')
     reacts2 = ax1.bar(si_df.index, si_df['DP'], width, color='red')                
     if dict3:
-        ti_df = dict_to_dataframe(dict3, logger)
+        ti_df = dict_to_dataframe_gatk(dict3, logger)
         reacts3 = ax1.bar(ti_df.index, ti_df['DP'], width, color='blue')
     if dict4:
-        fo_df = dict_to_dataframe(dict4, logger)
+        fo_df = dict_to_dataframe_gatk(dict4, logger)
         reacts4 = ax1.bar(fo_df.index, fo_df['DP'], width, color='black')
     plt.legend(loc='upper left')
     ax1.set_title('DP Distribution', fontsize=20)
@@ -162,8 +162,8 @@ def plot_dp_bar(dict1, dict2, sample_name1, sample_name2,annotate, logger,
 
 def plot_violin_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                    dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, logger)
-    si_df = dict_to_dataframe(dict2, logger)
+    fi_df = dict_to_dataframe_gatk(dict1, logger)
+    si_df = dict_to_dataframe_gatk(dict2, logger)
     if len(fi_df['frequency']) == len(si_df['frequency']):
         df = pd.DataFrame({sample_name1: fi_df['frequency'], sample_name2: si_df['frequency']})
 #        df = pd.concat([fi_df['frequency'], si_df['frequency']], 
@@ -173,7 +173,7 @@ def plot_violin_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
         ax.set(xlabel='frequency', ylabel='sample')
         plt.savefig(sample_name1 + "_" + sample_name2 +'_Allele_frequency_distribution.png')
     if dict3:
-        ti_df = dict_to_dataframe(dict3, logger)
+        ti_df = dict_to_dataframe_gatk(dict3, logger)
         if len(fi_df['frequency']) == len(si_df['frequency']) == len(ti_df['frequency']):
             df = pd.DataFrame({sample_name1: fi_df['frequency'], sample_name2: si_df['frequency'],
                                sample_name3: ti_df['frequency']})
@@ -189,8 +189,8 @@ def plot_violin_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
 
 def plot_dist_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                  dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, logger)
-    si_df = dict_to_dataframe(dict2, logger)
+    fi_df = dict_to_dataframe_gatk(dict1, logger)
+    si_df = dict_to_dataframe_gatk(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     sns.set(font_scale=1.8)
     print fi_df
@@ -200,19 +200,19 @@ def plot_dist_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
     ax1.set_title(sample_name1 + " vs " + sample_name2)
     plt.legend(loc='upper left')
     if dict3:
-        ti_df =  dict_to_dataframe(dict3, logger)
+        ti_df =  dict_to_dataframe_gatk(dict3, logger)
         ax1.set_tile(sample_name1 + " vs " + sample_name2 + " vs " + sample_name3)
         ax1 = sns.distplot(ti_df.frequency.dropna())
     if dict3 and dict4:
-        fo_df = dict_to_dataframe(dict3, logger)
+        fo_df = dict_to_dataframe_gatk(dict3, logger)
         ax1 = sns.distplot(fo_df.frequency.dropna())
     plt.savefig('sampleAllele_frequency_distribution_dist.png')
 
 
 def plot_dist_dp(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                  dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe(dict1, logger)
-    si_df = dict_to_dataframe(dict2, logger)
+    fi_df = dict_to_dataframe_gatk(dict1, logger)
+    si_df = dict_to_dataframe_gatk(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     sns.set(font_scale=1.8)
     ax1 = sns.distplot(fi_df['DP'].dropna())
@@ -222,11 +222,11 @@ def plot_dist_dp(dict1, dict2, sample_name1, sample_name2,annotate, logger,
     ax2.set(xlabel='DP', ylabel='sample')
     ax2.set_title(sample_name1 + " vs " + sample_name2)
     if dict3:
-        ti_df =  dict_to_dataframe(dict3, logger)
+        ti_df =  dict_to_dataframe_gatk(dict3, logger)
         ax1.set_tile(sample_name1 + " vs " + sample_name2 + " vs " + sample_name3)
         ax1 = sns.distplot(ti_df['DP'].dropna())
     if dict3 and dict4:
-        fo_df = dict_to_dataframe(dict3, logger)
+        fo_df = dict_to_dataframe_gatk(dict3, logger)
         ax1 = sns.distplot(fo_df['DP'].dropna())
     plt.savefig('sample_DP_dist.png')
     
