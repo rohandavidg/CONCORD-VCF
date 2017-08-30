@@ -50,6 +50,7 @@ def pair_tuple_the_list(vcf_file_list, logger, outdir):
             pair_list.append(pair)
     return pair_list
 
+
 def mutiprocess_all(vcf_file_list, logger, outdir):
     jobs = []
     pair_list = pair_tuple_the_list(vcf_file_list, logger, outdir)
