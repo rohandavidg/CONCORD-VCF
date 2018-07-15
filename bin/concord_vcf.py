@@ -4,6 +4,8 @@
 check concordance between VCF
 """
 
+import sys
+sys.path.append('/dlmp/sandbox/cgslIS/rohan/Python-2.7.11/lib/python')
 import vcf
 import os
 import csv

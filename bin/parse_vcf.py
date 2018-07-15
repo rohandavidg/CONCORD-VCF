@@ -59,7 +59,7 @@ def convert_vcf_format(vcf_file, logger):
     outfile1 = ".".join(vcf_file.split('.')[:-1]) + ".deannotated.vcf"
     outfile2 = ".".join(vcf_file.split('.')[:-1]) + ".deannotated.vcffixup.vcf" 
     cmd = perl + " " + vcf_remove + " -v " + vcf_file + " -o " + deannotate + " > " + outfile1
-    logger.info('running cmd {0}'.format(cmd))
+#    logger.INFO('running cmd {0}'.format(cmd))
     print cmd
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out = p.communicate()

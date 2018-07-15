@@ -29,12 +29,12 @@ def main(dict1, dict2, sample_name1, sample_name2, annotate,logger,
                 dict3=False, dict4=False, sample_name3=False, sample_name4=False)
     plot_violin_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                    dict3=False, dict4=False, sample_name3=False, sample_name4=False)
-    plot_dist_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
-                 dict3=False, dict4=False, sample_name3=False, sample_name4=False)
-    plot_dist_dp(dict1, dict2, sample_name1, sample_name2,annotate, logger,
-                 dict3=False, dict4=False, sample_name3=False, sample_name4=False)
-    plot_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
-            dict3=False, dict4=False, sample_name3=False, sample_name4=False)
+    plot_dist_af(dict1, dict2, sample_name1, sample_name2,annotate, logger)
+#                 dict3=False, dict4=False, sample_name3=False, sample_name4=False)
+#    plot_dist_dp(dict1, dict2, sample_name1, sample_name2,annotate, logger)
+#                 dict3=False, dict4=False, sample_name3=False, sample_name4=False)
+#    plot_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
+#            dict3=False, dict4=False, sample_name3=False, sample_name4=False)
                  
 
 def dict_to_dataframe(some_dict, logger):
@@ -108,8 +108,8 @@ def plot_freq(dict1, dict2, sample_name1, sample_name2,annotate, logger,
 
 def plot_dp_AF(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                dict3=False, dict4=False, sample_name3=False, sample_name4=False):
-    fi_df = dict_to_dataframe_gatk(dict1, logger)
-    si_df =  dict_to_dataframe_gatk(dict2, logger)
+    fi_df = dict_to_dataframe(dict1, logger)
+    si_df =  dict_to_dataframe(dict2, logger)
     fig = plt.figure(figsize=(20,16))
     ax1 = fig.add_subplot(1,1,1)
     ax1.scatter(fi_df['DP'], fi_df['frequency'], color='k', marker='x', s=350, vmin=0., vmax=0.6, label=sample_name1)
@@ -191,9 +191,10 @@ def plot_dist_af(dict1, dict2, sample_name1, sample_name2,annotate, logger,
                  dict3=False, dict4=False, sample_name3=False, sample_name4=False):
     fi_df = dict_to_dataframe_gatk(dict1, logger)
     si_df = dict_to_dataframe_gatk(dict2, logger)
+    print("si_df") 
+    print si_df
     fig = plt.figure(figsize=(20,16))
-    sns.set(font_scale=1.8)
-    print fi_df
+    sns.set(font_scale=1.8)    
     ax1 = sns.distplot(fi_df.frequency.dropna())
     ax1 = sns.distplot(si_df.frequency.dropna())
     ax1.set(xlabel='frequency', ylabel='sample')

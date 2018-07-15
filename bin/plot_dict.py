@@ -145,11 +145,15 @@ def plot_differences(overlap, first_vcf_unique, second_vcf_unique, new_error_siz
         v.get_label_by_id('B').set_text('')
         v.get_label_by_id('A').set_size(60)
         v.get_label_by_id('B').set_size(30)
-        plt.annotate('1st VCF INPUT', xy = v.get_label_by_id('10').get_position(), xytext = (-30,-70), size = 'xx-large',
-                     ha = 'center', textcoords = 'offset points', bbox = dict(boxstyle = 'round, pad=0.5', fc = 'lime', alpha = 0.3),
+        plt.annotate('1st VCF INPUT', xy = v.get_label_by_id('10').get_position(), 
+                     xytext = (-30,-70), size = 'xx-large', ha = 'center', 
+                     textcoords = 'offset points', 
+                     bbox = dict(boxstyle = 'round, pad=0.5', fc = 'lime', alpha = 0.3),
                      arrowprops = dict(arrowstyle = '->', connectionstyle = 'arc3, rad = 0.5', color = 'gray'))
-        plt.annotate('2nd VCF INPUT', xy = v.get_label_by_id('01').get_position(), xytext = (30,-70), size = 'xx-large',
-                     ha = 'center', textcoords = 'offset points', bbox = dict(boxstyle = 'round, pad = 0.5', fc = 'lime', alpha = 0.3),
+        plt.annotate('2nd VCF INPUT', xy = v.get_label_by_id('01').get_position(), 
+                     xytext = (30,-70), size = 'xx-large',
+                     ha = 'center', textcoords = 'offset points', 
+                     bbox = dict(boxstyle = 'round, pad = 0.5', fc = 'lime', alpha = 0.3),
                      arrowprops = dict(arrowstyle = '->', connectionstyle = 'arc3,rad = -0.5',color = 'gray'))
         plt.savefig(analysis_name + "_" + sample_name1 + "_" + sample_name2 + "_VCF_VARIANT_CHECK.png")
 

@@ -16,6 +16,7 @@ import pandas as pd
 import plot_dict
 import plot_allele_freq
 import excel_to_csv
+import pprint
 
 log_filename = "CONCORD-VCF"
 
@@ -31,7 +32,9 @@ def main(excel_file_1, sample_name_1,
         csv_file_1 = excel_to_csv.main(excel_file_1, sample_name_1, logger)
         csv_file_2 = excel_to_csv.main(excel_file_2,sample_name_2, logger)
         vcf_dict_1, SNP_dict_1, indel_dict_1 = parse_csv(csv_file_1)
+        pprint.pprint(SNP_dict_1)
         vcf_dict_2, SNP_dict_2, indel_dict_2 = parse_csv(csv_file_2)
+        pprint.pprint(SNP_dict_2)
         plot_total = plot_dict.main(vcf_dict_1, vcf_dict_2, sample_name_1, sample_name_2, "total", logger)
         plot_allele_frequency = plot_allele_freq.main(vcf_dict_1, vcf_dict_2, sample_name_1, sample_name_2, annotate_plot, logger)
         if SNP_dict_1 and SNP_dict_2:

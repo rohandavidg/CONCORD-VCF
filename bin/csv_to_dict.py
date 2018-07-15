@@ -9,6 +9,7 @@ import numpy as np
 import re
 import pprint
 import warnings
+from collections import defaultdict
 warnings.filterwarnings("ignore")
 
 def main(csv_file):
@@ -41,7 +42,10 @@ def parse_csv(csv_file):
 
 
 def create_dict_from_dataframe(dataframe):
-    some_dict = dataframe.groupby('pos')[['chrom', 'ref', 'alt', 'AD', 'AF', 'DP']].apply(lambda x: [x for x in x.values]).to_dict()
+    some_dict = defaultdict(list)
+#    variant = 'chrom' + ':' + 'pos' + 'ref' +">" + "alt"
+    some_dict = dataframe.groupby('genomic')[['chrom', 'ref', 'alt', 'AD', 'AF', 'DP']].apply(lambda x: [x for x in x.values]).to_dict()
+    print some_dict
     return some_dict
 
 

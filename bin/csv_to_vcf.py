@@ -53,10 +53,10 @@ def parse_csv(csv_file):
     return all_dict
 
 
-def ordered_dict(all_dict):
-    new_dict = {}
-    for k, v in sorted(all_dict.items()):
-        print v[0][0]
+#def ordered_dict(all_dict):
+#    new_dict = {}
+#    for k, v in sorted(all_dict.items()):
+#        print v[0][0]
 
 
 def dict_to_vcf(some_csv_dict, sample_name):
